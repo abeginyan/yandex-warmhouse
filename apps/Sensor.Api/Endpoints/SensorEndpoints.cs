@@ -1,4 +1,4 @@
-using Sensor.Api.Domain;
+using Sensor.Api.Models;
 using Sensor.Api.Infrastructure.Data;
 using Sensor.Api.Infrastructure.Http;
 

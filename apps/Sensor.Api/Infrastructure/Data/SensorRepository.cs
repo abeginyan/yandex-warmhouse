@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Sensor.Api.Domain;
+using Sensor.Api.Models;
 // 'Sensor' as a bare name is ambiguous between the Sensor.Api namespace segment and the domain class,
 // so we alias the class under a local name for use within this file.
-using SensorEntity = global::Sensor.Api.Domain.Sensor;
+using SensorEntity = global::Sensor.Api.Models.Sensor;
 
 namespace Sensor.Api.Infrastructure.Data;
 

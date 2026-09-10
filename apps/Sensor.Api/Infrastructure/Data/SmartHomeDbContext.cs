@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using SensorEntity = global::Sensor.Api.Domain.Sensor;
+using SensorEntity = global::Sensor.Api.Models.Sensor;
 
 namespace Sensor.Api.Infrastructure.Data;
 

@@ -1,4 +1,4 @@
-namespace Sensor.Api.Domain;
+namespace Sensor.Api.Models;
 
 public class Sensor
 {
@@ -12,24 +12,3 @@ public class Sensor
     public DateTime LastUpdated { get; set; }
     public DateTime CreatedAt { get; set; }
 }
-
-public record SensorCreateRequest(
-    string? Name,
-    string? Type,
-    string? Location,
-    string? Unit
-);
-
-public record SensorUpdateRequest(
-    string? Name,
-    string? Type,
-    string? Location,
-    double? Value,
-    string? Unit,
-    string? Status
-);
-
-public record SensorValueUpdateRequest(
-    double? Value,
-    string? Status
-);
