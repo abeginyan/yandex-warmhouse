@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace SmartHome.Api.Infrastructure.Http;
+namespace Sensor.Api.Infrastructure.Http;
 
 public record TemperatureResponse(
     double Value,

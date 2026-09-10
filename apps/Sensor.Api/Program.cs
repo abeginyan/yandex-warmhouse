@@ -1,8 +1,8 @@
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
-using SmartHome.Api.Endpoints;
-using SmartHome.Api.Infrastructure.Data;
-using SmartHome.Api.Infrastructure.Http;
+using Sensor.Api.Endpoints;
+using Sensor.Api.Infrastructure.Data;
+using Sensor.Api.Infrastructure.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 

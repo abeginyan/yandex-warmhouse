@@ -1,15 +1,15 @@
 using Microsoft.EntityFrameworkCore;
-using SmartHome.Api.Domain;
+using SensorEntity = global::Sensor.Api.Domain.Sensor;
 
-namespace SmartHome.Api.Infrastructure.Data;
+namespace Sensor.Api.Infrastructure.Data;
 
 public class SmartHomeDbContext(DbContextOptions<SmartHomeDbContext> options) : DbContext(options)
 {
-    public DbSet<Sensor> Sensors => Set<Sensor>();
+    public DbSet<SensorEntity> Sensors => Set<SensorEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Sensor>(entity =>
+        modelBuilder.Entity<SensorEntity>(entity =>
         {
             entity.ToTable("sensors");
             entity.HasKey(e => e.Id);

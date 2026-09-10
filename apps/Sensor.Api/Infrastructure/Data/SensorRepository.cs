@@ -1,30 +1,33 @@
 using Microsoft.EntityFrameworkCore;
-using SmartHome.Api.Domain;
+using Sensor.Api.Domain;
+// 'Sensor' as a bare name is ambiguous between the Sensor.Api namespace segment and the domain class,
+// so we alias the class under a local name for use within this file.
+using SensorEntity = global::Sensor.Api.Domain.Sensor;
 
-namespace SmartHome.Api.Infrastructure.Data;
+namespace Sensor.Api.Infrastructure.Data;
 
 public interface ISensorRepository
 {
-    Task<List<Sensor>> GetSensorsAsync(CancellationToken ct = default);
-    Task<Sensor?> GetSensorByIdAsync(int id, CancellationToken ct = default);
-    Task<Sensor> CreateSensorAsync(SensorCreateRequest request, CancellationToken ct = default);
-    Task<Sensor?> UpdateSensorAsync(int id, SensorUpdateRequest request, CancellationToken ct = default);
+    Task<List<SensorEntity>> GetSensorsAsync(CancellationToken ct = default);
+    Task<SensorEntity?> GetSensorByIdAsync(int id, CancellationToken ct = default);
+    Task<SensorEntity> CreateSensorAsync(SensorCreateRequest request, CancellationToken ct = default);
+    Task<SensorEntity?> UpdateSensorAsync(int id, SensorUpdateRequest request, CancellationToken ct = default);
     Task<bool> DeleteSensorAsync(int id, CancellationToken ct = default);
     Task<bool> UpdateSensorValueAsync(int id, double value, string status, CancellationToken ct = default);
 }
 
 public class SensorRepository(SmartHomeDbContext context) : ISensorRepository
 {
-    public Task<List<Sensor>> GetSensorsAsync(CancellationToken ct = default) =>
+    public Task<List<SensorEntity>> GetSensorsAsync(CancellationToken ct = default) =>
         context.Sensors.AsNoTracking().OrderBy(s => s.Id).ToListAsync(ct);
 
-    public Task<Sensor?> GetSensorByIdAsync(int id, CancellationToken ct = default) =>
+    public Task<SensorEntity?> GetSensorByIdAsync(int id, CancellationToken ct = default) =>
         context.Sensors.AsNoTracking().FirstOrDefaultAsync(s => s.Id == id, ct);
 
-    public async Task<Sensor> CreateSensorAsync(SensorCreateRequest request, CancellationToken ct = default)
+    public async Task<SensorEntity> CreateSensorAsync(SensorCreateRequest request, CancellationToken ct = default)
     {
         var now = DateTime.UtcNow;
-        var sensor = new Sensor
+        var sensor = new SensorEntity
         {
             Name = request.Name!,
             Type = request.Type!,
@@ -41,7 +44,7 @@ public class SensorRepository(SmartHomeDbContext context) : ISensorRepository
         return sensor;
     }
 
-    public async Task<Sensor?> UpdateSensorAsync(int id, SensorUpdateRequest request, CancellationToken ct = default)
+    public async Task<SensorEntity?> UpdateSensorAsync(int id, SensorUpdateRequest request, CancellationToken ct = default)
     {
         var sensor = await context.Sensors.FirstOrDefaultAsync(s => s.Id == id, ct);
         if (sensor is null) return null;

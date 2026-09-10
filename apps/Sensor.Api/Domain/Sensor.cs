@@ -1,4 +1,4 @@
-namespace SmartHome.Api.Domain;
+namespace Sensor.Api.Domain;
 
 public class Sensor
 {

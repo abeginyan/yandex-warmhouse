@@ -1,8 +1,8 @@
-using SmartHome.Api.Domain;
-using SmartHome.Api.Infrastructure.Data;
-using SmartHome.Api.Infrastructure.Http;
+using Sensor.Api.Domain;
+using Sensor.Api.Infrastructure.Data;
+using Sensor.Api.Infrastructure.Http;
 
-namespace SmartHome.Api.Endpoints;
+namespace Sensor.Api.Endpoints;
 
 internal record TemperatureByLocationResponse(
     string Location,

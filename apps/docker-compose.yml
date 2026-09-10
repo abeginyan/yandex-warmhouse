@@ -30,7 +30,7 @@ services:
 
   app:
     build:
-      context: ./SmartHome.Api
+      context: ./Sensor.Api
       dockerfile: Dockerfile
     container_name: smarthome-app
     depends_on:
