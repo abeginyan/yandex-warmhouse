@@ -192,3 +192,8 @@ build/
 
 tmp/
 task-*
+/apps/SmartHome.Api/bin/Debug/net8.0
+/apps/SmartHome.Api/obj
+/.vs
+/apps/SmartHome.Api/.vs/SmartHome.Api
+/apps/SmartHome.Api/.vs/ProjectEvaluation
