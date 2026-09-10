@@ -1,6 +1,8 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Sensor.Api.Models;
 
 public record SensorValueUpdateRequest(
-    double? Value,
-    string? Status
+    [property: Required] double? Value,
+    [property: Required] string? Status
 );

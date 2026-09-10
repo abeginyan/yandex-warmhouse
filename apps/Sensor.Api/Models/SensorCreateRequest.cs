@@ -1,8 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Sensor.Api.Models;
 
 public record SensorCreateRequest(
-    string? Name,
-    string? Type,
-    string? Location,
+    [property: Required] string? Name,
+    [property: Required] string? Type,
+    [property: Required] string? Location,
     string? Unit
 );

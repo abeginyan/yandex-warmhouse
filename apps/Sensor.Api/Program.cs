@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Sensor.Api.Infrastructure.Data;
 using Sensor.Api.Infrastructure.Http;
+using Sensor.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,10 +41,11 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 
 // --- Database ---
-builder.Services.AddDbContext<SmartHomeDbContext>(options =>
+builder.Services.AddDbContext<SensorDbContext>(options =>
     options.UseNpgsql(connectionString));
 
 builder.Services.AddScoped<ISensorRepository, SensorRepository>();
+builder.Services.AddScoped<ISensorService, SensorService>();
 
 // --- External temperature API (typed HttpClient with 10-second timeout) ---
 builder.Services.AddHttpClient<ITemperatureService, TemperatureService>(client =>
@@ -59,19 +61,19 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Validate database connectivity on startup (mirrors Go's Ping check)
+// Apply pending EF Core migrations on startup.
+// Creates the database and schema automatically if they don't exist.
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<SmartHomeDbContext>();
+    var db = scope.ServiceProvider.GetRequiredService<SensorDbContext>();
     try
     {
-        await db.Database.OpenConnectionAsync();
-        await db.Database.CloseConnectionAsync();
-        app.Logger.LogInformation("Connected to database successfully");
+        await db.Database.MigrateAsync();
+        app.Logger.LogInformation("Database migrations applied successfully");
     }
     catch (Exception ex)
     {
-        app.Logger.LogCritical(ex, "Unable to connect to database");
+        app.Logger.LogCritical(ex, "Failed to apply database migrations");
         throw;
     }
 }

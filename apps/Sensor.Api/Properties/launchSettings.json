@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "SmartHome.Api": {
+    "Sensor.Api": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

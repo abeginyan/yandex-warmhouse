@@ -3,7 +3,7 @@ using SensorEntity = global::Sensor.Api.Models.Sensor;
 
 namespace Sensor.Api.Infrastructure.Data;
 
-public class SmartHomeDbContext(DbContextOptions<SmartHomeDbContext> options) : DbContext(options)
+public class SensorDbContext(DbContextOptions<SensorDbContext> options) : DbContext(options)
 {
     public DbSet<SensorEntity> Sensors => Set<SensorEntity>();
 

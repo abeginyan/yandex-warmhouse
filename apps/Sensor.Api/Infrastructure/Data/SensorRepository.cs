@@ -16,7 +16,7 @@ public interface ISensorRepository
     Task<bool> UpdateSensorValueAsync(int id, double value, string status, CancellationToken ct = default);
 }
 
-public class SensorRepository(SmartHomeDbContext context) : ISensorRepository
+public class SensorRepository(SensorDbContext context) : ISensorRepository
 {
     public Task<List<SensorEntity>> GetSensorsAsync(CancellationToken ct = default) =>
         context.Sensors.AsNoTracking().OrderBy(s => s.Id).ToListAsync(ct);
