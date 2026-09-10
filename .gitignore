@@ -206,3 +206,5 @@ task-*
 /apps/Sensor.Api/bin/Debug/net8.0
 /apps/Sensor.Api/obj
 /apps/Sensor.Api/bin/Debug/net9.0
+/apps/User.Api/bin/Debug/net9.0
+/apps/User.Api/obj
