@@ -1,15 +1,15 @@
 # --- Build stage ---
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-COPY ["SmartHome.Api.csproj", "."]
+COPY ["Sensor.Api.csproj", "."]
 RUN dotnet restore
 
 COPY . .
 RUN dotnet publish -c Release -o /app/publish --no-restore
 
 # --- Runtime stage ---
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
 
 # Install tzdata for timezone support (mirrors Go's alpine tzdata layer)
@@ -20,4 +20,4 @@ EXPOSE 8080
 
 COPY --from=build /app/publish .
 
-ENTRYPOINT ["dotnet", "SmartHome.Api.dll"]
+ENTRYPOINT ["dotnet", "Sensor.Api.dll"]

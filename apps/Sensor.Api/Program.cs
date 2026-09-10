@@ -1,6 +1,6 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
-using Sensor.Api.Endpoints;
 using Sensor.Api.Infrastructure.Data;
 using Sensor.Api.Infrastructure.Http;
 
@@ -25,12 +25,18 @@ builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 // Match Go's 5-second graceful shutdown timeout
 builder.Services.Configure<HostOptions>(o => o.ShutdownTimeout = TimeSpan.FromSeconds(5));
 
-// --- JSON: use snake_case to preserve the Go API contract ---
+// --- Controllers with snake_case JSON (preserves the Go API contract) ---
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
+    });
+
+// snake_case also for the minimal-API /health endpoint
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
-    options.SerializerOptions.DefaultIgnoreCondition =
-        System.Text.Json.Serialization.JsonIgnoreCondition.Never;
 });
 
 // --- Database ---
@@ -81,7 +87,7 @@ if (app.Environment.IsDevelopment())
 // Health check — same response shape as Go: {"status":"ok"}
 app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
 
-app.MapSensorEndpoints();
+app.MapControllers();
 
 app.Logger.LogInformation("Server starting on :{Port}", port);
 app.Run();
