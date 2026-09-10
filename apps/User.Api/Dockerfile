@@ -2,8 +2,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-# Copy project manifest and NuGet config first so restore is cached independently
-COPY ["Sensor.Api.csproj", "."]
+COPY ["User.Api.csproj", "."]
 COPY ["nuget.config", "."]
 RUN dotnet restore
 
@@ -17,8 +16,8 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends tzdata \
     && rm -rf /var/lib/apt/lists/*
 
-EXPOSE 8080
+EXPOSE 8081
 
 COPY --from=build /app/publish .
 
-ENTRYPOINT ["dotnet", "Sensor.Api.dll"]
+ENTRYPOINT ["dotnet", "User.Api.dll"]

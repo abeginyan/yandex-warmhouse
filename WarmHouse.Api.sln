@@ -5,6 +5,8 @@ VisualStudioVersion = 17.14.37614.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sensor.Api", "apps\Sensor.Api\Sensor.Api.csproj", "{3E6E7D13-1CCB-91B4-C75D-CFB3C696FEA0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "User.Api", "apps\User.Api\User.Api.csproj", "{613D0781-7AD2-E0E9-29D4-1D5F58CE7406}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{3E6E7D13-1CCB-91B4-C75D-CFB3C696FEA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E6E7D13-1CCB-91B4-C75D-CFB3C696FEA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E6E7D13-1CCB-91B4-C75D-CFB3C696FEA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{613D0781-7AD2-E0E9-29D4-1D5F58CE7406}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{613D0781-7AD2-E0E9-29D4-1D5F58CE7406}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{613D0781-7AD2-E0E9-29D4-1D5F58CE7406}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{613D0781-7AD2-E0E9-29D4-1D5F58CE7406}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

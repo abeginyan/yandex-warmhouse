@@ -1,12 +1,12 @@
 {
   "profiles": {
-    "Sensor.Api": {
+    "User.Api": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:59851;http://localhost:59852"
+      "applicationUrl": "https://localhost:64852;http://localhost:64853"
     }
   }
 }

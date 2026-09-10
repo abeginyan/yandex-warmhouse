@@ -1,0 +1,63 @@
+services:
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: warmhouse-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - warmhouse-network
+
+  sensor-api:
+    build:
+      context: ./apps/Sensor.Api
+      dockerfile: Dockerfile
+    container_name: sensor-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=Host=postgres;Port=5432;Database=smarthome;Username=postgres;Password=postgres
+      - TEMPERATURE_API_URL=http://temperature-api:8081
+      - PORT=8080
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    networks:
+      - warmhouse-network
+
+  user-api:
+    build:
+      context: ./apps/User.Api
+      dockerfile: Dockerfile
+    container_name: user-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=Host=postgres;Port=5432;Database=users;Username=postgres;Password=postgres
+      - Jwt__Secret=change-this-secret-in-production-min-32-chars!
+      - Jwt__Issuer=user-api
+      - Jwt__Audience=warmhouse
+      - Jwt__ExpiryMinutes=60
+      - PORT=8081
+    ports:
+      - "8081:8081"
+    restart: unless-stopped
+    networks:
+      - warmhouse-network
+
+volumes:
+  postgres_data:
+
+networks:
+  warmhouse-network:
+    driver: bridge
