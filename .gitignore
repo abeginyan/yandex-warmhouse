@@ -202,3 +202,6 @@ task-*
 /apps/SmartHome.Api/bin/Debug/net8.0
 /apps/SmartHome.Api/obj
 /.vs
+/apps/Sensor.Api/.vs
+/apps/Sensor.Api/bin/Debug/net8.0
+/apps/Sensor.Api/obj
