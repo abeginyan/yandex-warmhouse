@@ -16,7 +16,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends tzdata \
     && rm -rf /var/lib/apt/lists/*
 
-EXPOSE 8081
+EXPOSE 5050
 
 COPY --from=build /app/publish .
 

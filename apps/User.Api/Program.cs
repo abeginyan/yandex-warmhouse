@@ -16,10 +16,6 @@ var connectionString =
     builder.Configuration.GetConnectionString("DefaultConnection") ??
     "Host=localhost;Port=5432;Database=users;Username=postgres;Password=postgres";
 
-var portEnv = Environment.GetEnvironmentVariable("PORT") ?? ":8081";
-var port = portEnv.TrimStart(':');
-builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
-
 builder.Services.Configure<HostOptions>(o => o.ShutdownTimeout = TimeSpan.FromSeconds(5));
 
 // --- JWT ---
@@ -121,5 +117,4 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-app.Logger.LogInformation("Server starting on :{Port}", port);
 app.Run();

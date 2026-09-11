@@ -8,6 +8,7 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./apps/postgres/init-databases.sql:/docker-entrypoint-initdb.d/init-databases.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -25,9 +26,10 @@ services:
       postgres:
         condition: service_healthy
     environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
       - DATABASE_URL=Host=postgres;Port=5432;Database=smarthome;Username=postgres;Password=postgres
       - TEMPERATURE_API_URL=http://temperature-api:8081
-      - PORT=8080
     ports:
       - "8080:8080"
     restart: unless-stopped
@@ -43,14 +45,15 @@ services:
       postgres:
         condition: service_healthy
     environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5050
       - DATABASE_URL=Host=postgres;Port=5432;Database=users;Username=postgres;Password=postgres
       - Jwt__Secret=change-this-secret-in-production-min-32-chars!
       - Jwt__Issuer=user-api
       - Jwt__Audience=warmhouse
       - Jwt__ExpiryMinutes=60
-      - PORT=8081
     ports:
-      - "8081:8081"
+      - "5050:5050"
     restart: unless-stopped
     networks:
       - warmhouse-network

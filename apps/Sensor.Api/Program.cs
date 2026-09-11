@@ -18,11 +18,6 @@ var temperatureApiUrl =
     builder.Configuration["TemperatureApi:BaseUrl"] ??
     "http://temperature-api:8081";
 
-// PORT env var may include a leading colon (e.g. ":8080") to match the Go convention
-var portEnv = Environment.GetEnvironmentVariable("PORT") ?? ":8080";
-var port = portEnv.TrimStart(':');
-builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
-
 // Match Go's 5-second graceful shutdown timeout
 builder.Services.Configure<HostOptions>(o => o.ShutdownTimeout = TimeSpan.FromSeconds(5));
 
@@ -91,5 +86,4 @@ app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
 
 app.MapControllers();
 
-app.Logger.LogInformation("Server starting on :{Port}", port);
 app.Run();
