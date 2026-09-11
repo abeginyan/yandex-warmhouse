@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Temperature.Api": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:49601;http://localhost:49602"
+    }
+  }
+}

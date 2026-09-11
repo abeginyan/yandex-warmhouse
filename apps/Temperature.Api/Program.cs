@@ -1,9 +1,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
-using Sensor.Api.Infrastructure.Data;
-using Sensor.Api.Infrastructure.Http;
-using Sensor.Api.Services;
+using Temperature.Api.Infrastructure.Data;
+using Temperature.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,17 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString =
     Environment.GetEnvironmentVariable("DATABASE_URL") ??
     builder.Configuration.GetConnectionString("DefaultConnection") ??
-    "Host=localhost;Port=5432;Database=smarthome;Username=postgres;Password=postgres";
+    "Host=localhost;Port=5432;Database=temperature;Username=postgres;Password=postgres";
 
-var temperatureApiUrl =
-    Environment.GetEnvironmentVariable("TEMPERATURE_API_URL") ??
-    builder.Configuration["TemperatureApi:BaseUrl"] ??
-    "http://temperature-api:8082";
-
-// Match Go's 5-second graceful shutdown timeout
 builder.Services.Configure<HostOptions>(o => o.ShutdownTimeout = TimeSpan.FromSeconds(5));
 
-// --- Controllers with snake_case JSON (preserves the Go API contract) ---
+// --- Controllers with snake_case JSON ---
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -29,38 +22,28 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
     });
 
-// snake_case also for the minimal-API /health endpoint
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
 });
 
 // --- Database ---
-builder.Services.AddDbContext<SensorDbContext>(options =>
+builder.Services.AddDbContext<TemperatureDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-builder.Services.AddScoped<ISensorRepository, SensorRepository>();
-builder.Services.AddScoped<ISensorService, SensorService>();
+builder.Services.AddScoped<ITemperatureRepository, TemperatureRepository>();
+builder.Services.AddScoped<ITemperatureReadingService, TemperatureReadingService>();
 
-// --- External temperature API (typed HttpClient with 10-second timeout) ---
-builder.Services.AddHttpClient<ITemperatureService, TemperatureService>(client =>
-{
-    var baseUrl = temperatureApiUrl.TrimEnd('/') + '/';
-    client.BaseAddress = new Uri(baseUrl);
-    client.Timeout = TimeSpan.FromSeconds(10);
-});
-
-// --- OpenAPI / Swagger ---
+// --- Swagger ---
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Apply pending EF Core migrations on startup.
-// Creates the database and schema automatically if they don't exist.
+// Apply migrations on startup — creates the 'temperature' database and schema if absent
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<SensorDbContext>();
+    var db = scope.ServiceProvider.GetRequiredService<TemperatureDbContext>();
     try
     {
         await db.Database.MigrateAsync();
@@ -73,15 +56,12 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-app.Logger.LogInformation("Temperature service initialized with API URL: {Url}", temperatureApiUrl);
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// Health check — same response shape as Go: {"status":"ok"}
 app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
 
 app.MapControllers();

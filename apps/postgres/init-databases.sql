@@ -2,3 +2,4 @@
 -- without Npgsql needing to fall back to the admin 'postgres' database first.
 CREATE DATABASE smarthome;
 CREATE DATABASE users;
+CREATE DATABASE temperature;

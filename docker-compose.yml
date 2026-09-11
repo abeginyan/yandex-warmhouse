@@ -17,6 +17,24 @@ services:
     networks:
       - warmhouse-network
 
+  temperature-api:
+    build:
+      context: ./apps/Temperature.Api
+      dockerfile: Dockerfile
+    container_name: temperature-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8082
+      - DATABASE_URL=Host=postgres;Port=5432;Database=temperature;Username=postgres;Password=postgres
+    ports:
+      - "8082:8082"
+    restart: unless-stopped
+    networks:
+      - warmhouse-network
+
   sensor-api:
     build:
       context: ./apps/Sensor.Api
@@ -25,11 +43,13 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      temperature-api:
+        condition: service_started
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
       - DATABASE_URL=Host=postgres;Port=5432;Database=smarthome;Username=postgres;Password=postgres
-      - TEMPERATURE_API_URL=http://temperature-api:8081
+      - TEMPERATURE_API_URL=http://temperature-api:8082
     ports:
       - "8080:8080"
     restart: unless-stopped
