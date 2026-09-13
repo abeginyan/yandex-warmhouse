@@ -15,25 +15,52 @@ public interface ITemperatureRepository
 
 public class TemperatureRepository(TemperatureDbContext context) : ITemperatureRepository
 {
-    public Task<TemperatureReading?> GetLatestBySensorIdAsync(string sensorId, CancellationToken ct = default) =>
-        context.Readings
-            .AsNoTracking()
-            .Where(r => r.SensorId == sensorId)
-            .OrderByDescending(r => r.Timestamp)
-            .FirstOrDefaultAsync(ct);
+    public async Task<TemperatureReading?> GetLatestBySensorIdAsync(string sensorId, CancellationToken ct = default)
+    {
+        //var temp = await context.Readings
+        //            .AsNoTracking()
+        //            .Where(r => r.SensorId == sensorId)
+        //            .OrderByDescending(r => r.Timestamp)
+        //            .FirstOrDefaultAsync(ct);
 
-    public Task<TemperatureReading?> GetLatestByLocationAsync(string location, CancellationToken ct = default) =>
-        context.Readings
-            .AsNoTracking()
-            .Where(r => r.Location == location)
-            .OrderByDescending(r => r.Timestamp)
-            .FirstOrDefaultAsync(ct);
+        var temp = new TemperatureReading
+        {
+            SensorId = sensorId
+        };
 
-    public Task<List<TemperatureReading>> GetAllAsync(CancellationToken ct = default) =>
-        context.Readings
-            .AsNoTracking()
-            .OrderByDescending(r => r.Timestamp)
-            .ToListAsync(ct);
+        SetDefaulValues(temp?.Location, temp?.SensorId ?? "", temp);
+
+        return temp;
+    }
+
+    public async Task<TemperatureReading?> GetLatestByLocationAsync(string location, CancellationToken ct = default)
+    {
+        //var temp = await context.Readings
+        //        .AsNoTracking()
+        //        .Where(r => r.Location == location)
+        //        .OrderByDescending(r => r.Timestamp)
+        //        .FirstOrDefaultAsync(ct);
+
+        var temp = new TemperatureReading
+        {
+            Location = location
+        };
+
+        SetDefaulValues(location, temp?.SensorId ?? "", temp);
+
+        return temp;
+    }
+
+    public async Task<List<TemperatureReading>> GetAllAsync(CancellationToken ct = default)
+    {
+        var temps = await context.Readings
+                .AsNoTracking()
+                .OrderByDescending(r => r.Timestamp)
+                .ToListAsync(ct);
+
+        temps.ForEach(temp => SetDefaulValues(temp.Location, temp.SensorId, temp));
+        return temps;
+    }
 
     public async Task<TemperatureReading> CreateAsync(TemperatureReading reading, CancellationToken ct = default)
     {
@@ -45,7 +72,6 @@ public class TemperatureRepository(TemperatureDbContext context) : ITemperatureR
     public async Task<TemperatureReading?> UpdateLatestBySensorIdAsync(
         string sensorId, Action<TemperatureReading> apply, CancellationToken ct = default)
     {
-        // Tracked query (no AsNoTracking) so EF picks up the mutation on SaveChanges.
         var reading = await context.Readings
             .Where(r => r.SensorId == sensorId)
             .OrderByDescending(r => r.Timestamp)
@@ -62,4 +88,32 @@ public class TemperatureRepository(TemperatureDbContext context) : ITemperatureR
         context.Readings
             .Where(r => r.SensorId == sensorId)
             .ExecuteDeleteAsync(ct);
+
+    private static void SetDefaulValues(string location, string sensorId, TemperatureReading? temp)
+    {
+        if (temp is null) return;
+
+        temp.Value = Math.Round(Random.Shared.NextDouble() * 100, 2);
+        if (location == "")
+        {
+            temp.Location = temp.SensorId switch
+            {
+                "1" => "Living Room",
+                "2" => "Bedroom",
+                "3" => "Kitchen",
+                _ => "Unknown"
+            };
+        }
+
+        if (sensorId == "")
+        {
+            temp.SensorId = temp.SensorId switch
+            {
+                "Living Room" => "1",
+                "Bedroom" => "2",
+                "Kitchen" => "3",
+                _ => "Unknown"
+            };
+        }
+    }
 }

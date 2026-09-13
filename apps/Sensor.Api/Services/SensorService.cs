@@ -21,8 +21,6 @@ public class SensorService(
     ITemperatureService tempService,
     ILogger<SensorService> logger) : ISensorService
 {
-    // ── Read ────────────────────────────────────────────────────────────────
-
     public async Task<List<SensorEntity>> GetSensorsAsync(CancellationToken ct = default)
     {
         var sensors = await repo.GetSensorsAsync(ct);
@@ -80,8 +78,6 @@ public class SensorService(
     public Task<TemperatureResponse> GetTemperatureByLocationAsync(string location, CancellationToken ct = default) =>
         tempService.GetTemperatureAsync(location, ct);
 
-    // ── Create ──────────────────────────────────────────────────────────────
-
     public async Task<SensorEntity> CreateSensorAsync(SensorCreateRequest request, CancellationToken ct = default)
     {
         var sensor = await repo.CreateSensorAsync(request, ct);
@@ -92,8 +88,6 @@ public class SensorService(
         return sensor;
     }
 
-    // ── Update metadata (PUT) ───────────────────────────────────────────────
-
     public async Task<SensorEntity?> UpdateSensorAsync(int id, SensorUpdateRequest request, CancellationToken ct = default)
     {
         var sensor = await repo.UpdateSensorAsync(id, request, ct);
@@ -103,8 +97,6 @@ public class SensorService(
 
         return sensor;
     }
-
-    // ── Update value only (PATCH) ───────────────────────────────────────────
 
     public async Task<bool> UpdateSensorValueAsync(int id, double value, string status, CancellationToken ct = default)
     {
@@ -118,9 +110,6 @@ public class SensorService(
 
         return updated;
     }
-
-    // ── Delete ──────────────────────────────────────────────────────────────
-
     public async Task<bool> DeleteSensorAsync(int id, CancellationToken ct = default)
     {
         // Best-effort: remove all temperature readings for this sensor before deleting it
@@ -136,8 +125,6 @@ public class SensorService(
 
         return await repo.DeleteSensorAsync(id, ct);
     }
-
-    // ── Helpers ─────────────────────────────────────────────────────────────
 
     private async Task SyncReadingAsync(SensorEntity sensor, double value, string status, CancellationToken ct)
     {
