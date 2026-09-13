@@ -192,8 +192,21 @@ build/
 
 tmp/
 task-*
+/.vs/SmartHome.Api/CopilotIndices/17.14.1706.11463
+/.vs/SmartHome.Api/FileContentIndex
+/.vs/SmartHome.Api/v17
+/.vs/Warmhouse/CopilotIndices/17.14.1706.11463
+/.vs/Warmhouse/FileContentIndex
+/.vs/Warmhouse/v17
+/apps/SmartHome.Api/.vs
 /apps/SmartHome.Api/bin/Debug/net8.0
 /apps/SmartHome.Api/obj
 /.vs
-/apps/SmartHome.Api/.vs/SmartHome.Api
-/apps/SmartHome.Api/.vs/ProjectEvaluation
+/apps/Sensor.Api/.vs
+/apps/Sensor.Api/bin/Debug/net8.0
+/apps/Sensor.Api/obj
+/apps/Sensor.Api/bin/Debug/net9.0
+/apps/User.Api/bin/Debug/net9.0
+/apps/User.Api/obj
+/apps/Temperature.Api/bin/Debug/net9.0
+/apps/Temperature.Api/obj
